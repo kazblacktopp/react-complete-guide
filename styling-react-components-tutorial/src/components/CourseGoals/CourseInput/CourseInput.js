@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 import Button from '../../UI/Button/Button';
 import './CourseInput.css';
 
-const CourseInput = props => {
+function CourseInput(props) {
   const [enteredValue, setEnteredValue] = useState('');
 
-  const goalInputChangeHandler = event => {
+  function goalInputChangeHandler(event) {
     setEnteredValue(event.target.value);
-  };
+  }
 
-  const formSubmitHandler = event => {
+  function formSubmitHandler(event) {
     event.preventDefault();
     props.onAddGoal(enteredValue);
-  };
+  }
 
   return (
     <form onSubmit={formSubmitHandler}>
@@ -24,6 +24,6 @@ const CourseInput = props => {
       <Button type="submit">Add Goal</Button>
     </form>
   );
-};
+}
 
 export default CourseInput;

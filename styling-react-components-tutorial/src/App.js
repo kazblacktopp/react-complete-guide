@@ -4,26 +4,26 @@ import CourseGoalList from './components/CourseGoals/CourseGoalList/CourseGoalLi
 import CourseInput from './components/CourseGoals/CourseInput/CourseInput';
 import './App.css';
 
-const App = () => {
+function App() {
   const [courseGoals, setCourseGoals] = useState([
     { text: 'Do all exercises!', id: 'g1' },
-    { text: 'Finish the course!', id: 'g2' }
+    { text: 'Finish the course!', id: 'g2' },
   ]);
 
-  const addGoalHandler = enteredText => {
+  function addGoalHandler(enteredText) {
     setCourseGoals(prevGoals => {
       const updatedGoals = [...prevGoals];
       updatedGoals.unshift({ text: enteredText, id: Math.random().toString() });
       return updatedGoals;
     });
-  };
+  }
 
-  const deleteItemHandler = goalId => {
+  function deleteItemHandler(goalId) {
     setCourseGoals(prevGoals => {
       const updatedGoals = prevGoals.filter(goal => goal.id !== goalId);
       return updatedGoals;
     });
-  };
+  }
 
   let content = (
     <p style={{ textAlign: 'center' }}>No goals found. Maybe add one?</p>
@@ -52,6 +52,6 @@ const App = () => {
       </section>
     </div>
   );
-};
+}
 
 export default App;
