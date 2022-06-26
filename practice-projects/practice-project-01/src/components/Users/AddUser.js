@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import Card from '../UI/Card';
+import ErrorModal from '../UI/ErrorModal';
 import Button from '../UI/Button';
 import styles from './AddUser.module.css';
-import { useState } from 'react';
 
 function AddUser(props) {
   const [enteredUsername, setEnteredUsername] = useState('');
   const [enteredAge, setEnteredAge] = useState('');
+  const [error, setError] = useState();
 
   function usernameChangeHandler(event) {
     setEnteredUsername(event.target.value);
@@ -19,7 +21,7 @@ function AddUser(props) {
     event.preventDefault();
 
     if (enteredUsername.trim().length === 0 || !enteredAge) {
-      props.onError({
+      setError({
         title: 'Invalid input',
         message: 'Please enter a valid name and age (non-empty values).',
       });
@@ -27,7 +29,7 @@ function AddUser(props) {
     }
 
     if (+enteredAge < 1) {
-      props.onError({
+      setError({
         title: 'Invalid age',
         message: 'Please enter a valid age (> 0).',
       });
@@ -39,8 +41,19 @@ function AddUser(props) {
     setEnteredAge('');
   }
 
+  function exitModalHandler() {
+    setError(null);
+  }
+
   return (
     <Card className={styles.input}>
+      {error && (
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          onClick={exitModalHandler}
+        />
+      )}
       <form autoComplete="off" onSubmit={addUserHandler}>
         <label htmlFor="username">Username</label>
         <input
