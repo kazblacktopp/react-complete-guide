@@ -13,14 +13,12 @@ const Login = props => {
 
   useEffect(() => {
     const timeOut = setTimeout(() => {
-      console.log('Validating form....');
       setFormIsValid(
         enteredEmail.includes('@') && enteredPassword.trim().length > 6
       );
     }, 500);
 
     return () => {
-      console.log('CLEANING UP!');
       clearTimeout(timeOut);
     };
   }, [enteredEmail, enteredPassword]);
