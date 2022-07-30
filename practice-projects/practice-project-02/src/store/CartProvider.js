@@ -30,6 +30,34 @@ function cartReducer(state, action) {
 
     return { items: updatedCartItems, totalAmount: updatedTotalAmount };
   }
+
+  if (action.type === 'REMOVE-ITEM') {
+    // Find index of item to remove
+    const existingCartItemIndex = state.items.findIndex(
+      item => item.id === action.id
+    );
+
+    const existingCartItem = state.items[existingCartItemIndex];
+
+    const updatedTotalAmount = Math.abs(
+      state.totalAmount - existingCartItem.price
+    );
+
+    let updatedCartItems;
+
+    // Adjust amount of affected item or remove completely
+    if (existingCartItem && existingCartItem.amount > 1) {
+      const updatedCartItem = { ...existingCartItem };
+      updatedCartItem.amount--;
+      updatedCartItems = [...state.items];
+      updatedCartItems[existingCartItemIndex] = updatedCartItem;
+    } else {
+      updatedCartItems = state.items.filter(item => item.id !== action.id);
+    }
+
+    return { items: updatedCartItems, totalAmount: updatedTotalAmount };
+  }
+
   return defaultCartState;
 }
 
