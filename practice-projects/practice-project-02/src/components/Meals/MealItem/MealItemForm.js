@@ -22,6 +22,7 @@ function MealItemForm(props) {
     }
 
     props.onSubmitItem(inputAmountNumber);
+    event.target.reset();
   }
 
   return (
