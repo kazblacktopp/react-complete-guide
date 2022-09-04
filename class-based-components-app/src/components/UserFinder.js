@@ -1,5 +1,5 @@
-import { Fragment, Component } from 'react';
-
+import React, { Fragment, Component } from 'react';
+// import { Fragment, useState, useEffect } from 'react';
 import Users from './Users';
 import classes from './UserFinder.module.css';
 
@@ -11,6 +11,7 @@ const DUMMY_USERS = [
 
 export default class UserFinder extends Component {
   constructor() {
+    // @ts-ignore
     super();
 
     this.state = {
@@ -51,11 +52,9 @@ export default class UserFinder extends Component {
 //   const [filteredUsers, setFilteredUsers] = useState(DUMMY_USERS);
 //   const [searchTerm, setSearchTerm] = useState('');
 
-//   useEffect(() => {
-//     setFilteredUsers(
-//       DUMMY_USERS.filter(user => user.name.includes(searchTerm))
-//     );
-//   }, [searchTerm]);
+// useEffect(() => {
+//   setFilteredUsers(DUMMY_USERS.filter(user => user.name.includes(searchTerm)));
+// }, [searchTerm]);
 
 //   const searchChangeHandler = event => {
 //     setSearchTerm(event.target.value);

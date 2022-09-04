@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 // import { useState } from 'react';
 import User from './User';
 
@@ -6,6 +6,7 @@ import classes from './Users.module.css';
 
 export default class Users extends Component {
   constructor() {
+    // @ts-ignore
     super();
 
     this.state = {
