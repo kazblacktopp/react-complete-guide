@@ -2,13 +2,14 @@ import Section from '../UI/Section';
 import TaskItem from './TaskItem';
 import classes from './Tasks.module.css';
 
-const Tasks = (props) => {
+export default function Tasks(props) {
+  const { items, loading, error, onFetch } = props;
   let taskList = <h2>No tasks found. Start adding some!</h2>;
 
-  if (props.items.length > 0) {
+  if (items.length > 0) {
     taskList = (
       <ul>
-        {props.items.map((task) => (
+        {items.map(task => (
           <TaskItem key={task.id}>{task.text}</TaskItem>
         ))}
       </ul>
@@ -17,11 +18,11 @@ const Tasks = (props) => {
 
   let content = taskList;
 
-  if (props.error) {
-    content = <button onClick={props.onFetch}>Try again</button>;
+  if (error) {
+    content = <button onClick={onFetch}>Try again</button>;
   }
 
-  if (props.loading) {
+  if (loading) {
     content = 'Loading tasks...';
   }
 
@@ -30,6 +31,4 @@ const Tasks = (props) => {
       <div className={classes.container}>{content}</div>
     </Section>
   );
-};
-
-export default Tasks;
+}
