@@ -1,47 +1,42 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
+import useAJAX from './hooks/use-ajax';
 
 import Tasks from './components/Tasks/Tasks';
 import NewTask from './components/NewTask/NewTask';
 
-function App() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+export default function App() {
   const [tasks, setTasks] = useState([]);
+  const { isLoading, error, sendRequest } = useAJAX();
 
-  const fetchTasks = async taskText => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        'https://react-http-621d6-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json'
-      );
+  const API_URL =
+    'https://react-http-621d6-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json';
 
-      if (!response.ok) {
-        throw new Error('Request failed!');
-      }
+  const fetchTasks = useCallback(async () => {
+    await sendRequest(
+      {
+        url: API_URL,
+      },
+      loadTasks
+    );
+  }, []);
 
-      const data = await response.json();
+  function loadTasks(tasksObj) {
+    const loadedTasks = [];
 
-      const loadedTasks = [];
-
-      for (const taskKey in data) {
-        loadedTasks.push({ id: taskKey, text: data[taskKey].text });
-      }
-
-      setTasks(loadedTasks);
-    } catch (err) {
-      setError(err.message || 'Something went wrong!');
+    for (const taskKey in tasksObj) {
+      loadedTasks.push({ id: taskKey, text: tasksObj[taskKey].text });
     }
-    setIsLoading(false);
-  };
+
+    setTasks(loadedTasks);
+  }
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [fetchTasks]);
 
-  const taskAddHandler = task => {
+  function taskAddHandler(task) {
     setTasks(prevTasks => prevTasks.concat(task));
-  };
+  }
 
   return (
     <Fragment>
@@ -55,5 +50,3 @@ function App() {
     </Fragment>
   );
 }
-
-export default App;
