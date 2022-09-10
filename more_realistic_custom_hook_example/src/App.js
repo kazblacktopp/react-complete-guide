@@ -12,13 +12,8 @@ export default function App() {
     'https://react-http-621d6-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json';
 
   const fetchTasks = useCallback(async () => {
-    await sendRequest(
-      {
-        url: API_URL,
-      },
-      loadTasks
-    );
-  }, []);
+    await sendRequest({ url: API_URL }, loadTasks);
+  }, [sendRequest]);
 
   function loadTasks(tasksObj) {
     const loadedTasks = [];
