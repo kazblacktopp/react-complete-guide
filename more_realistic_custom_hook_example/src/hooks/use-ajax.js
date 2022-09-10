@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export default function useAJAX() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function sendRequest(requestConfig, applyDataFn) {
+  const sendRequest = useCallback(async (requestConfig, applyDataFn) => {
     const { url, options = null } = requestConfig;
 
     setIsLoading(true);
@@ -17,7 +17,7 @@ export default function useAJAX() {
           ? {
               method: options.method,
               headers: options.headers,
-              body: JSON.stringify({ text: options.body }),
+              body: JSON.stringify(options.body),
             }
           : null
       );
@@ -34,6 +34,6 @@ export default function useAJAX() {
       setError(err.message || 'Something went wrong!');
     }
     setIsLoading(false);
-  }
+  }, []);
   return { isLoading, error, sendRequest };
 }
