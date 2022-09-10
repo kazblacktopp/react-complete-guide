@@ -9,6 +9,7 @@ export default function TaskForm({ loading, onEnterTask }) {
     event.preventDefault();
 
     const enteredValue = taskInputRef.current.value;
+    event.target.reset();
 
     if (enteredValue.trim().length > 0) {
       onEnterTask(enteredValue);
