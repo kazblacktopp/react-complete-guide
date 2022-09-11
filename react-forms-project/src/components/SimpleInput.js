@@ -4,37 +4,35 @@ import useInput from '../hooks/use-input';
 const SimpleInput = () => {
   const enteredNameRef = useRef();
 
-  const emailFormatTestRegExp = new RegExp(/\S+@\S+\.\S+/);
-
   const {
     value: enteredName,
     isValid: nameInputIsValid,
-    hasError: enteredNameIsInvalid,
+    hasError: enteredNameHasError,
     inputChangeHandler: enteredNameChangeHandler,
     inputBlurHandler: nameInputBlurHandler,
-    reset: nameInputReset,
-  } = useInput(name => isNameValid(name));
+    reset: resetNameInput,
+  } = useInput(value => isNameValid(value));
 
   const {
     value: enteredEmail,
     isValid: emailInputIsValid,
-    hasError: enteredEmailIsInvalid,
+    hasError: enteredEmailHasError,
     wasValid: enteredEmailWasValid,
     lostFocus: emailFieldLostFocus,
     inputChangeHandler: enteredEmailChangeHandler,
     inputBlurHandler: emailInputBlurHandler,
-    reset: emailInputReset,
-  } = useInput(email => isEmailValid(email));
+    reset: resetEmailInput,
+  } = useInput(value => isEmailValid(value));
 
-  const inputNameClasses = enteredNameIsInvalid
+  const inputNameClasses = enteredNameHasError
     ? 'form-control invalid'
     : 'form-control';
 
-  const emailFieldHasError =
-    (enteredEmailIsInvalid && enteredEmailWasValid) ||
-    (enteredEmailIsInvalid && emailFieldLostFocus);
+  const emailInputHasError =
+    (enteredEmailHasError && enteredEmailWasValid) ||
+    (enteredEmailHasError && emailFieldLostFocus);
 
-  const inputEmailClasses = emailFieldHasError
+  const inputEmailClasses = emailInputHasError
     ? 'form-control invalid'
     : 'form-control';
 
@@ -49,6 +47,7 @@ const SimpleInput = () => {
   }
 
   function isEmailValid(email) {
+    const emailFormatTestRegExp = new RegExp(/\S+@\S+\.\S+/);
     return emailFormatTestRegExp.test(email);
   }
 
@@ -61,8 +60,8 @@ const SimpleInput = () => {
 
     enteredNameRef.current.focus();
 
-    nameInputReset();
-    emailInputReset();
+    resetNameInput();
+    resetEmailInput();
   }
 
   return (
@@ -77,7 +76,7 @@ const SimpleInput = () => {
           onBlur={nameInputBlurHandler}
           ref={enteredNameRef}
         />
-        {enteredNameIsInvalid && (
+        {enteredNameHasError && (
           <p className="error-text">Name must not be empty!</p>
         )}
       </div>
@@ -90,7 +89,7 @@ const SimpleInput = () => {
           value={enteredEmail}
           onBlur={emailInputBlurHandler}
         />
-        {emailFieldHasError && (
+        {emailInputHasError && (
           <p className="error-text">
             Email input must be a valid email address. E.g. name@email.com
           </p>
