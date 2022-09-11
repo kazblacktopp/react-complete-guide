@@ -1,23 +1,19 @@
 import { useState } from 'react';
-// import {useRef} from 'react';
 
 const SimpleInput = () => {
   const [enteredName, setEnteredName] = useState('');
-  // const enteredNameRef = useRef();
-  const [nameInputIsValid, setNameInputIsValid] = useState(false);
   const [nameInputIsTouched, setNameInputIsTouched] = useState(false);
+
+  const nameInputIsValid = enteredName.trim() !== '' && nameInputIsTouched;
+  const enteredNameIsInvalid = nameInputIsTouched && !nameInputIsValid;
 
   function enteredNameChangeHandler(event) {
     setEnteredName(event.target.value);
+    setNameInputIsTouched(true);
   }
 
   function nameInputBlurHandler(event) {
     setNameInputIsTouched(true);
-
-    if (enteredName.trim() === '') {
-      setNameInputIsValid(false);
-      return;
-    }
   }
 
   function submitFormHandler(event) {
@@ -25,28 +21,17 @@ const SimpleInput = () => {
 
     setNameInputIsTouched(true);
 
-    if (enteredName.trim() === '') {
-      setNameInputIsValid(false);
+    if (!nameInputIsValid) {
       return;
     }
 
-    setNameInputIsValid(true);
-
     console.log(enteredName);
 
-    // const submittedName = enteredNameRef.current.value;
-    // console.log(submittedName);
-
-    // enteredNameRef.current.value = ''; // Not best practice (directly manipulates the DOM)
-    // Or:
-    // event.target.reset();
-    // Or:
     setEnteredName('');
+    setNameInputIsTouched(false);
   }
 
-  const formIsInvalid = nameInputIsTouched && !nameInputIsValid;
-
-  const nameFieldClasses = formIsInvalid
+  const nameFieldClasses = enteredNameIsInvalid
     ? 'form-control invalid'
     : 'form-control';
 
@@ -58,12 +43,13 @@ const SimpleInput = () => {
           type="text"
           id="name"
           onChange={enteredNameChangeHandler}
-          // ref={enteredNameRef}
           value={enteredName}
           onBlur={nameInputBlurHandler}
         />
       </div>
-      {formIsInvalid && <p className="error-text">Name must not be empty!</p>}
+      {enteredNameIsInvalid && (
+        <p className="error-text">Name must not be empty!</p>
+      )}
       <div className="form-actions">
         <button>Submit</button>
       </div>
