@@ -1,78 +1,30 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
+import useInput from '../hooks/use-input';
 
 const SimpleInput = () => {
-  const [enteredName, setEnteredName] = useState('');
-  const [nameInputIsTouched, setNameInputIsTouched] = useState(false);
-
-  const [enteredEmail, setEnteredEmail] = useState('');
-  const [emailInputIsTouched, setEmailInputIsTouched] = useState(false);
-  const [enteredEmailWasValid, setEnteredEmailWasValid] = useState(false);
-  const [emailFieldLostFocus, setEmailFieldLostFocus] = useState(false);
-
   const enteredNameRef = useRef();
-  const enteredEmailRef = useRef();
-
-  const nameInputIsValid = enteredName.trim() !== '';
-  const enteredNameIsInvalid = nameInputIsTouched && !nameInputIsValid;
 
   const emailFormatTestRegExp = new RegExp(/\S+@\S+\.\S+/);
-  const emailInputIsValid = isEmailValid(enteredEmail);
-  const enteredEmailIsInvalid = emailInputIsTouched && !emailInputIsValid;
 
-  function isEmailValid(email) {
-    return emailFormatTestRegExp.test(email);
-  }
+  const {
+    value: enteredName,
+    isValid: nameInputIsValid,
+    hasError: enteredNameIsInvalid,
+    inputChangeHandler: enteredNameChangeHandler,
+    inputBlurHandler: nameInputBlurHandler,
+    reset: nameInputReset,
+  } = useInput(name => isNameValid(name));
 
-  useEffect(() => {
-    if (emailInputIsValid) {
-      setEnteredEmailWasValid(true);
-    }
-  }, [emailInputIsValid]);
-
-  let formIsValid = false;
-
-  if (nameInputIsValid && emailInputIsValid) {
-    formIsValid = true;
-  }
-
-  function enteredInputChangeHandler(event) {
-    if (event.target === enteredNameRef.current) {
-      setEnteredName(event.target.value);
-      setNameInputIsTouched(true);
-    }
-
-    if (event.target === enteredEmailRef.current) {
-      setEnteredEmail(event.target.value);
-      setEmailInputIsTouched(true);
-    }
-    return;
-  }
-
-  function nameInputBlurHandler() {
-    setNameInputIsTouched(true);
-  }
-
-  function emailInputBlurHandler() {
-    setEmailInputIsTouched(true);
-    setEmailFieldLostFocus(true);
-  }
-
-  function submitFormHandler(event) {
-    event.preventDefault();
-
-    if (!nameInputIsValid || !emailInputIsValid) {
-      return;
-    }
-
-    enteredNameRef.current.focus();
-    setEnteredName('');
-    setNameInputIsTouched(false);
-
-    setEnteredEmail('');
-    setEmailInputIsTouched(false);
-    setEnteredEmailWasValid(false);
-    setEmailFieldLostFocus(false);
-  }
+  const {
+    value: enteredEmail,
+    isValid: emailInputIsValid,
+    hasError: enteredEmailIsInvalid,
+    wasValid: enteredEmailWasValid,
+    lostFocus: emailFieldLostFocus,
+    inputChangeHandler: enteredEmailChangeHandler,
+    inputBlurHandler: emailInputBlurHandler,
+    reset: emailInputReset,
+  } = useInput(email => isEmailValid(email));
 
   const inputNameClasses = enteredNameIsInvalid
     ? 'form-control invalid'
@@ -86,6 +38,33 @@ const SimpleInput = () => {
     ? 'form-control invalid'
     : 'form-control';
 
+  let formIsValid = false;
+
+  if (nameInputIsValid && emailInputIsValid) {
+    formIsValid = true;
+  }
+
+  function isNameValid(name) {
+    return name.trim() !== '';
+  }
+
+  function isEmailValid(email) {
+    return emailFormatTestRegExp.test(email);
+  }
+
+  function submitFormHandler(event) {
+    event.preventDefault();
+
+    if (!nameInputIsValid || !emailInputIsValid) {
+      return;
+    }
+
+    enteredNameRef.current.focus();
+
+    nameInputReset();
+    emailInputReset();
+  }
+
   return (
     <form onSubmit={submitFormHandler}>
       <div className={inputNameClasses}>
@@ -93,7 +72,7 @@ const SimpleInput = () => {
         <input
           type="text"
           id="name"
-          onChange={enteredInputChangeHandler}
+          onChange={enteredNameChangeHandler}
           value={enteredName}
           onBlur={nameInputBlurHandler}
           ref={enteredNameRef}
@@ -107,10 +86,9 @@ const SimpleInput = () => {
         <input
           type="text"
           id="email"
-          onChange={enteredInputChangeHandler}
+          onChange={enteredEmailChangeHandler}
           value={enteredEmail}
           onBlur={emailInputBlurHandler}
-          ref={enteredEmailRef}
         />
         {emailFieldHasError && (
           <p className="error-text">
