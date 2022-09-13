@@ -1,9 +1,15 @@
-import { useRef } from 'react';
 import { useInput } from '../hooks/use-input';
 
-const BasicForm = () => {
-  const firstNameRef = useRef();
+function enteredNameIsValid(name) {
+  return name.trim() !== '';
+}
 
+function enteredEmailIsValid(email) {
+  const emailValidationRegExp = new RegExp(/\S+@\S+\.\S+/);
+  return emailValidationRegExp.test(email);
+}
+
+export default function BasicForm() {
   const {
     value: enteredFirstName,
     isValid: firstNameIsValid,
@@ -55,15 +61,6 @@ const BasicForm = () => {
     formIsValid = true;
   }
 
-  function enteredNameIsValid(name) {
-    return name.trim() !== '';
-  }
-
-  function enteredEmailIsValid(email) {
-    const emailValidationRegExp = new RegExp(/\S+@\S+\.\S+/);
-    return emailValidationRegExp.test(email);
-  }
-
   function formSubmitHandler(event) {
     event.preventDefault();
 
@@ -75,7 +72,7 @@ const BasicForm = () => {
     console.log(enteredLastName);
     console.log(enteredEmail);
 
-    firstNameRef.current.focus();
+    document.activeElement.blur();
 
     resetFirstNameInput();
     resetLastNameInput();
@@ -93,7 +90,6 @@ const BasicForm = () => {
             value={enteredFirstName}
             onChange={firstNameChangeHandler}
             onBlur={firstNameBlurHandler}
-            ref={firstNameRef}
           />
           {firstNameInputHasError && (
             <p className="error-text">First Name must not be empty!</p>
@@ -133,6 +129,4 @@ const BasicForm = () => {
       </div>
     </form>
   );
-};
-
-export default BasicForm;
+}
