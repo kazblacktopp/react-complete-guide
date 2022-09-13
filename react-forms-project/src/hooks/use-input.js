@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 
-export default function useInput(validateValue) {
+export function useInput(validateValue) {
   const [enteredValue, setEnteredValue] = useState('');
-  const [isTouched, setIsTouched] = useState(false);
-
+  const [valueIsTouched, setValueIsTouched] = useState(false);
   const [valueWasValid, setValueWasValid] = useState(false);
-  const [inputFieldLostFocus, setInputFieldLostFocus] = useState(false);
+  const [valueLostFocus, setValueLostFocus] = useState(false);
 
   const valueIsValid = validateValue(enteredValue);
-  const valueHasError = isTouched && !valueIsValid;
+  const valueInputHasError = !valueIsValid && valueIsTouched;
 
   useEffect(() => {
     if (valueIsValid) {
@@ -18,27 +17,28 @@ export default function useInput(validateValue) {
 
   function inputChangeHandler(event) {
     setEnteredValue(event.target.value);
-    setIsTouched(true);
+    setValueIsTouched(true);
   }
 
   function inputBlurHandler() {
-    setIsTouched(true);
-    setInputFieldLostFocus(true);
+    setValueIsTouched(true);
+    setValueLostFocus(true);
   }
 
   function reset() {
     setEnteredValue('');
-    setIsTouched(false);
+    setValueIsTouched(false);
     setValueWasValid(false);
-    setInputFieldLostFocus(false);
+    setValueLostFocus(false);
   }
 
   return {
     value: enteredValue,
+    isTouched: valueIsTouched,
     isValid: valueIsValid,
-    hasError: valueHasError,
     wasValid: valueWasValid,
-    lostFocus: inputFieldLostFocus,
+    lostFocus: valueLostFocus,
+    hasError: valueInputHasError,
     inputChangeHandler,
     inputBlurHandler,
     reset,
