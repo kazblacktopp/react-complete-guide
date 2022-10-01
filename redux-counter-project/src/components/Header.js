@@ -1,16 +1,18 @@
 import classes from './Header.module.css';
 
-const Header = () => {
+export default function Header() {
+  const { header } = classes;
+
   return (
-    <header className={classes.header}>
+    <header className={header}>
       <h1>Redux Auth</h1>
       <nav>
         <ul>
           <li>
-            <a href='/'>My Products</a>
+            <a href="/">My Products</a>
           </li>
           <li>
-            <a href='/'>My Sales</a>
+            <a href="/">My Sales</a>
           </li>
           <li>
             <button>Logout</button>
@@ -19,6 +21,4 @@ const Header = () => {
       </nav>
     </header>
   );
-};
-
-export default Header;
+}

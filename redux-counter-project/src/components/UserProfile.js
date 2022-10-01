@@ -1,11 +1,11 @@
 import classes from './UserProfile.module.css';
 
-const UserProfile = () => {
+export default function UserProfile() {
+  const { profile } = classes;
+
   return (
-    <main className={classes.profile}>
+    <main className={profile}>
       <h2>My User Profile</h2>
     </main>
   );
-};
-
-export default UserProfile;
+}
